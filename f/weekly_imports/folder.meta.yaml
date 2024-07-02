@@ -1,0 +1,8 @@
+summary: null
+display_name: weekly_imports
+extra_perms:
+  g/all: true
+  u/mrchrisdams: true
+owners:
+  - u/mrchrisdams
+  - g/all
