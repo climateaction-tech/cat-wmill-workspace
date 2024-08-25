@@ -1,8 +1,6 @@
-import os
 import wmill
-import rich
-
 import gspread
+import rich
 
 # You can import any PyPi package.
 # See here for more info: https://www.windmill.dev/docs/advanced/dependencies_in_python
@@ -14,38 +12,48 @@ import gspread
 # 5. set up cronjob
 
 
+def main(gsheet_key: str, worksheet_name: str, override_email: str = None):
+    if override_email:
+        LAST_EMAIL_ADDRESS = override_email
+    else:
+        last_state = wmill.get_state()
+        LAST_EMAIL_ADDRESS = last_state.get("last_email_address")
 
+    rich.print(f"Current Last email address: {LAST_EMAIL_ADDRESS}")
 
-def main():
-    print("Running a check")
+    path_to_resource = "f/weekly_imports/improving_c_gspread_service_account"
+    gspread_cred_dict = wmill.get_resource(path_to_resource)
 
-    # a resource
+    gc = gspread.service_account_from_dict(gspread_cred_dict)
 
-    
+    gsheet = gc.open_by_key(gsheet_key)
+    responses_worksheet = gsheet.worksheet(worksheet_name)
+    last_match = responses_worksheet.findall(LAST_EMAIL_ADDRESS)[-1]
+    # return the rows after the matching email address
+    header_rows = responses_worksheet.row_values(1)
+    rich.print(f"Header rows from the worksheet: {header_rows}")
+    matching_rows = responses_worksheet.get_values(f"A{last_match.row + 1}:ZZ")
+    last_row = matching_rows[-1]
 
+    if not last_row:
+        rich.print("No new signups to pass along")
+        return []
 
+    if last_row:
+        last_email = last_row[1]
 
-    # gc = gspread.service_account(filename=settings.GSPREAD_SERVICE_ACCOUNT)
-    # gsheet = gc.open_by_key(settings.GSPREAD_KEY)
-    # responses_worksheet = gsheet.worksheet(CAT_RESPONSES_WORKSHEET)
+        if last_email:
+            rich.print(f"Setting last email address to: {last_email}")
+            new_state = {"last_email_address": last_email}
+            wmill.set_state(new_state)
 
-    # res = wmill.get_resource("u/mrchrisadams/improving_c_gspread_service_account")
-    res = wmill.get_resource("f/weekly_imports/improving_c_gspread_service_account")
+    member_dicts = []
 
-
-
-
-
-    rich.print(res)
-
-    # Get last state of this script execution by the same trigger/user
-    last_state = wmill.get_state()
-    new_state = {"last_email_address": 42} if last_state is None else last_state
-    new_state["last_email_address"] += 1
-    wmill.set_state(new_state)
-
-    # fetch context variables
-    signups = []
+    for row in matching_rows:
+        member_dict = {}
+        for index, key in enumerate(header_rows):
+            member_dict[key] = row[index]
+        member_dicts.append(member_dict)
 
     # return value is converted to JSON
-    return {"signups": signups, "state": []}
+    return member_dicts

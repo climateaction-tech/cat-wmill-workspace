@@ -1,4 +1,4 @@
-summary: ''
+summary: Fetch most recent rows for import
 description: Fetches the latest signs to the CAT form
 lock: '!inline f/weekly_imports/fetch_latest_signups.script.lock'
 concurrency_time_window_s: 0
@@ -6,6 +6,23 @@ kind: script
 schema:
   $schema: 'https://json-schema.org/draft/2020-12/schema'
   type: object
-  properties: {}
-  required: []
+  properties:
+    gsheet_key:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    override_email:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    worksheet_name:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - gsheet_key
+    - worksheet_name
 timeout: 300
