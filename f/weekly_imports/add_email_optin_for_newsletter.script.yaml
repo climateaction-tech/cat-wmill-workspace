@@ -1,0 +1,20 @@
+summary: add_email_opt_in_for_newsletter
+description: ''
+lock: '!inline f/weekly_imports/add_email_optin_for_newsletter.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  properties:
+    subscribers:
+      type: object
+      description: ''
+      default: null
+    token:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - subscribers
+    - token
