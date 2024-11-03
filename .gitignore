@@ -1,0 +1,10 @@
+.venv
+.env
+.env.*serviceaccount.json
+*.variable.yaml
+*.resource.yaml
+
+.vscode
+
+data
+cruft

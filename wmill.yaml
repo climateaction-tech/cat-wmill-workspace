@@ -1,1 +1,1 @@
-includes: ["f/**"]
+defaultTs: "deno"
