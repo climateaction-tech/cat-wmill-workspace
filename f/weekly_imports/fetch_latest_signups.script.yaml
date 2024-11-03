@@ -2,7 +2,9 @@ summary: Fetch most recent rows for import
 description: Fetches the latest signs to the CAT form
 lock: '!inline f/weekly_imports/fetch_latest_signups.script.lock'
 concurrency_time_window_s: 0
+has_preprocessor: false
 kind: script
+no_main_func: false
 schema:
   $schema: 'https://json-schema.org/draft/2020-12/schema'
   type: object
