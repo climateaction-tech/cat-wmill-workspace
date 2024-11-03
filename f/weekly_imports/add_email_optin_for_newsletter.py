@@ -1,8 +1,21 @@
-import requests
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "httpx",
+#     "python-dotenv",
+#     "rich",
+# ]
+# ///
+import os
+import httpx
 import rich
+import json
 
 
 def main(subscribers: [dict], token: str):
+    return subscribe_to_newsletter(subscribers, token)
+
+def subscribe_to_newsletter(subscribers: [dict], token: str):
     url = "https://api.buttondown.com/v1/subscribers"
     headers = {
         "accept": "application/json",
@@ -16,7 +29,22 @@ def main(subscribers: [dict], token: str):
         if opt_in:
             rich.print(f"{email_address} has opted-in. Subscribing them")
             payload = {"email_address": email_address, "type": "regular"}
-            response = requests.post(url, json=payload, headers=headers)
+            response = httpx.post(url, json=payload, headers=headers)
+            if 
             rich.print(response.text)
         else:
             rich.print(f"{email_address} did not opt-in to the newsletter. Skipping")
+
+if __name__ == "__main__":
+    import dotenv
+    dotenv.load_dotenv()
+
+    with open("latest_signups.json", "r") as file:
+        subscribers = json.load(file)
+
+    token = os.getenv("BUTTONDOWN_API_KEY")
+    if token is None:
+        raise ValueError("BUTTONDOWN_API_KEY environment variable not set")
+
+    # breakpoint()
+    subscribe_to_newsletter(subscribers, token)
