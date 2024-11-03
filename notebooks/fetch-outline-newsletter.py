@@ -132,7 +132,24 @@ def __(re, res):
 
 
     multi_line_pattern.findall(res.data)
+
+
     return (multi_line_pattern,)
+
+
+@app.cell
+def __(multi_line_pattern, pattern, res):
+    data_copy = res.data
+
+    for match_pattern in multi_line_pattern.findall(res.data):
+        data_copy = data_copy.replace(match_pattern, "")
+
+    for new_line_match in pattern.findall(res.data):
+        data_copy = data_copy.replace(new_line_match, "")
+
+    data_copy
+        
+    return data_copy, match_pattern, new_line_match
 
 
 @app.cell
