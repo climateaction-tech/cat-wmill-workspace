@@ -1,10 +1,16 @@
 .venv
+__pycache__
+
+.DS_Store
+
 .env
 .env.*serviceaccount.json
 *.variable.yaml
 *.resource.yaml
 
 .vscode
+
+
 
 data
 cruft
