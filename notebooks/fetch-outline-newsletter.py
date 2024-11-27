@@ -132,8 +132,6 @@ def __(re, res):
 
 
     multi_line_pattern.findall(res.data)
-
-
     return (multi_line_pattern,)
 
 
@@ -148,8 +146,17 @@ def __(multi_line_pattern, pattern, res):
         data_copy = data_copy.replace(new_line_match, "")
 
     data_copy
-        
     return data_copy, match_pattern, new_line_match
+
+
+@app.cell
+def __(data_copy):
+    import datetime
+
+    timestamp: str = str(datetime.datetime.now().strftime("%Y-%m-%d--%H-%M"))
+    with open(f"cat-generated-newsletter-{timestamp}.md", "w") as cat_file:
+        cat_file.write(data_copy)
+    return cat_file, datetime, timestamp
 
 
 @app.cell
