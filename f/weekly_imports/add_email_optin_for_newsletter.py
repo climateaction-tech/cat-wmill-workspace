@@ -10,13 +10,20 @@ import os
 import httpx
 import rich
 import json
+import typing
+import logging
 
 
-def main(subscribers: [dict], token: str):
+logger = logging.getLogger(__name__)
+logger.addHandler(rich.logging.RichHandler())
+logger.setLevel(logging.INFO)
+
+
+def main(subscribers: typing.List[dict], token: str):
     return subscribe_to_newsletter(subscribers, token)
 
 
-def subscribe_to_newsletter(subscribers: [dict], token: str):
+def subscribe_to_newsletter(subscribers: typing.List[dict], token: str):
     url = "https://api.buttondown.com/v1/subscribers"
     headers = {
         "accept": "application/json",
@@ -28,13 +35,13 @@ def subscribe_to_newsletter(subscribers: [dict], token: str):
         email_address = subscriber["Email Address"]
         opt_in = subscriber["Our weekly CAT newsletter"]
         if opt_in:
-            rich.print(f"{email_address} has opted-in. Subscribing them")
+            logger.info(f"{email_address} has opted-in. Subscribing them")
             payload = {"email_address": email_address, "type": "regular"}
             response = httpx.post(url, json=payload, headers=headers)
 
-            rich.print(response.text)
+            logger.debug(response.text)
         else:
-            rich.print(f"{email_address} did not opt-in to the newsletter. Skipping")
+            logger.info(f"{email_address} did not opt-in to the newsletter. Skipping")
 
 
 if __name__ == "__main__":
