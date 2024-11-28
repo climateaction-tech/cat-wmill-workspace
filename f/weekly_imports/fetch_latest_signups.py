@@ -45,12 +45,16 @@ def main(gsheet_key: str, worksheet_name: str, override_email: str = None):
 
     logger.info(f"Current Last email address: {LAST_EMAIL_ADDRESS}")
 
-    path_to_resource = "f/weekly_imports/improving_c_gspread_service_account"
+    path_to_resource = "f/weekly_imports/gspread_service_account"
     gspread_cred_dict = wmill.get_resource(path_to_resource)
 
-    member_dicts, matching_rows = fetch_latest_signups(
+    member_dicts, *matching_rows = fetch_latest_signups(
         gspread_cred_dict, gsheet_key, worksheet_name, LAST_EMAIL_ADDRESS
     )
+
+    if not member_dicts:
+        logger.info("No new signups to pass along")
+        return []
 
     last_row = member_dicts[-1]
 
@@ -87,7 +91,15 @@ def fetch_latest_signups(
 
     member_dicts = []
 
+    # matching rows is a list of lists
+    # and an list containing an empty list is truthy, 
+    # so we check for the first element
+    if not matching_rows[0]:
+        logger.info("No new signups found")
+        return member_dicts, matching_rows
+
     for row in matching_rows:
+        logger.info(f"Row: {row}")
         member_dict = {}
         for index, key in enumerate(header_rows):
             member_dict[key] = row[index]

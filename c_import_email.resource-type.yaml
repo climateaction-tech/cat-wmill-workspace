@@ -1,0 +1,15 @@
+description: >-
+  An object containing the last email address imported by the weekly import for
+  CAT
+format_extension: null
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - last_email_address
+  properties:
+    last_email_address:
+      type: string
+      description: ''
+      default: ''
+  required: []
