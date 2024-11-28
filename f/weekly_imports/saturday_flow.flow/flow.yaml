@@ -1,0 +1,37 @@
+summary: Saturday night import flow
+description: ''
+value:
+  modules:
+    - id: a
+      value:
+        type: script
+        input_transforms:
+          gsheet_key:
+            type: javascript
+            expr: variable('f/weekly_imports/form_responses_sheet_key')
+          override_email:
+            type: static
+            value: ''
+          worksheet_name:
+            type: javascript
+            expr: variable('f/weekly_imports/worksheet_name')
+        is_trigger: false
+        path: f/weekly_imports/fetch_latest_signups
+    - id: b
+      value:
+        type: script
+        input_transforms:
+          subscribers:
+            type: javascript
+            expr: results.a
+          token:
+            type: javascript
+            expr: variable('f/weekly_imports/buttondown_api_key')
+        is_trigger: false
+        path: f/weekly_imports/add_email_optin_for_newsletter
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order: []
+  properties: {}
+  required: []
