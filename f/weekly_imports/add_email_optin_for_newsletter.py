@@ -12,10 +12,10 @@ import rich
 import json
 import typing
 import logging
-
+from rich.logging import RichHandler
 
 logger = logging.getLogger(__name__)
-logger.addHandler(rich.logging.RichHandler())
+logger.addHandler(RichHandler())
 logger.setLevel(logging.INFO)
 
 
