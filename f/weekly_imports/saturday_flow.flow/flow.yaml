@@ -29,6 +29,21 @@ value:
             expr: variable('f/weekly_imports/buttondown_api_key')
         is_trigger: false
         path: f/weekly_imports/add_email_optin_for_newsletter
+    - id: c
+      value:
+        type: script
+        input_transforms:
+          channel:
+            type: static
+            value: '#cat-convert-kitten'
+          subscribers:
+            type: javascript
+            expr: results.a
+          token:
+            type: javascript
+            expr: '`${variable(''f/weekly_imports/slack_messaging_token'')}`'
+        is_trigger: false
+        path: f/weekly_imports/list_new_emails_for_slack/list_new_emails_for_slack
 schema:
   $schema: 'https://json-schema.org/draft/2020-12/schema'
   type: object
