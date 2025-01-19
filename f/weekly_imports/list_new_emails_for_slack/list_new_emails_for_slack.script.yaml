@@ -1,0 +1,30 @@
+summary: ''
+description: ''
+lock: >-
+  !inline
+  f/weekly_imports/list_new_emails_for_slack/list_new_emails_for_slack.script.lock
+has_preprocessor: false
+kind: script
+no_main_func: false
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  properties:
+    channel:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    subscribers:
+      type: object
+      description: ''
+      default: null
+    token:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - subscribers
+    - channel
+    - token
