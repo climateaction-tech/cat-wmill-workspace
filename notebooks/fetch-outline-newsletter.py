@@ -18,6 +18,26 @@ app = marimo.App(width="medium")
 
 @app.cell
 def __(mo):
+    mo.md(
+        """
+        # Build our latest CAT newsletter
+
+        This marimo script / notebook does the following
+
+        1. Fetch the latest newsletter from the CAT wiki, Outline.
+        2. Clean up some text artefacts we don't want in the newsletter
+        3. Add the latest events
+        4. Add the latest jobs
+        5. Write it to a local file for inspection and further processing
+
+        It's intended to be run on a Sunday as part of the process for getting the CAT newsletter ready, while still providing some editorial control.
+        """
+    )
+    return
+
+
+@app.cell
+def __(mo):
     mo.md(r"""## Fetch our dependencies""")
     return
 
@@ -79,8 +99,13 @@ def __(API_KEY, Outline, pprint):
     )
 
     auth_info_response = client.auth.info()
-    pprint(auth_info_response.data)
-    return auth_info_response, client
+    outline_team = auth_info_response.data.team.name 
+    user_name = auth_info_response.data.user.name
+    if auth_info_response.data:
+        pprint(f"Logged successfully in as user: {user_name}, in outline team: {outline_team}")
+
+
+    return auth_info_response, client, outline_team, user_name
 
 
 @app.cell
@@ -384,9 +409,12 @@ def __(data_copy, events_section, job_section):
 @app.cell
 def __(datetime, newsletter_content_with_jobs_and_events):
     timestamp: str = str(datetime.datetime.now().strftime("%Y-%m-%d--%H-%M"))
-    with open(f"cat-generated-newsletter-{timestamp}.md", "w") as cat_file:
+    new_newsletter_filename = f"cat-generated-newsletter-{timestamp}.md"
+    with open(new_newsletter_filename, "w") as cat_file:
         cat_file.write(newsletter_content_with_jobs_and_events)
-    return cat_file, timestamp
+
+        print(f"Saved newsletter to {new_newsletter_filename}")
+    return cat_file, new_newsletter_filename, timestamp
 
 
 @app.cell
